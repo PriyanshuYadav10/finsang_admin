@@ -332,7 +332,7 @@ export default function ShopAdminPage({
 
       // Fetch user details separately since orders.user_id references auth.users
       const ordersWithUserDetails = await Promise.all(
-        (data || []).map(async (order) => {
+        (data || []).map(async (order: any) => {
           try {
             const { data: userData, error: userError } = await supabase
               .from("users")
