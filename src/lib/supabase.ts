@@ -1,22 +1,30 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+let supabaseInstance: any = null;
+let initialized = false;
 
-let supabase: any = null;
+const initializeSupabase = () => {
+  if (!initialized) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (supabaseUrl && supabaseAnonKey) {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-} else if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
-  // Only throw error in production on server-side when actually used
-  throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
-}
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    }
 
-export const getSupabase = () => {
-  if (!supabase) {
-    throw new Error('Supabase client not initialized. Missing environment variables.');
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+    initialized = true;
   }
-  return supabase;
+
+  return supabaseInstance;
 };
 
-export { supabase }; 
+// Create a proxy that initializes on first use
+export const supabase = new Proxy({} as any, {
+  get: (target, prop) => {
+    const instance = initializeSupabase();
+    return instance[prop];
+  },
+});
+
+export const getSupabase = initializeSupabase; 
