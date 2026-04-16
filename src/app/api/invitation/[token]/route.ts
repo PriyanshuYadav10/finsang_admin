@@ -1,16 +1,24 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ) {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    // Check if Supabase is configured
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Supabase not configured:', { supabaseUrl, supabaseKey: supabaseKey ? 'SET' : 'NOT_SET' });
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
     const { token } = await params;
 
     console.log('API called with token:', token);
@@ -19,15 +27,6 @@ export async function GET(
       return NextResponse.json(
         { error: 'Invitation token is required' },
         { status: 400 }
-      );
-    }
-
-    // Check if Supabase is configured
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('Supabase not configured:', { supabaseUrl, supabaseKey: supabaseKey ? 'SET' : 'NOT_SET' });
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
       );
     }
 
