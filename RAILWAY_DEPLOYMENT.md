@@ -37,7 +37,7 @@ JWT_SECRET=your-very-long-random-secret-minimum-32-characters
 JWT_EXPIRES_IN=7d
 
 # CORS (update with your frontend URL)
-ALLOWED_ORIGINS=https://finsang-admin-production.up.railway.app,http://localhost:3000
+ALLOWED_ORIGINS=https://finsangadmin-production.up.railway.app,http://localhost:3000
 
 # File Upload
 MAX_FILE_SIZE=5242880
@@ -48,7 +48,7 @@ DEFAULT_USER_ROLE=user
 ADMIN_ROLES=admin,moderator
 
 # Frontend URL (for redirects)
-NEXT_PUBLIC_BASE_URL=https://finsang-admin-production.up.railway.app
+NEXT_PUBLIC_BASE_URL=https://finsangadmin-production.up.railway.app
 ```
 
 ### 1.3 Backend Deployment Settings
