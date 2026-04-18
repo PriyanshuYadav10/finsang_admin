@@ -3,8 +3,9 @@ class FinsangMartAPI {
   private token: string | null = null;
 
   constructor(
-    baseURL: string = process.env.NEXT_PUBLIC_BACKEND_URL ||
-      "http://localhost:3001/api"
+    baseURL: string =
+      process.env.NEXT_PUBLIC_BACKEND_URL?.trim().replace(/\/+$/, '') ||
+      "/api"
   ) {
     this.baseURL = baseURL;
   }
